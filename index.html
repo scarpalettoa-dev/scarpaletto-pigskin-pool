@@ -1,0 +1,890 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+  :root{
+    --turf:#1E3A2B;
+    --turf-dark:#122318;
+    --turf-line: rgba(243,239,228,0.14);
+    --chalk:#F3EFE4;
+    --chalk-dim: rgba(243,239,228,0.62);
+    --gold:#C9A227;
+    --gold-bright:#E0BC3E;
+    --rust:#9A4331;
+    --steel:#56727A;
+    --win:#3F7A4E;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; }
+  #app{
+    font-family:'IBM Plex Sans', sans-serif;
+    background:var(--turf);
+    color:var(--chalk);
+    min-height:100vh;
+    padding-bottom:60px;
+    line-height:1.45;
+  }
+  h1,h2,h3,.num{
+    font-family:'Oswald', sans-serif;
+    letter-spacing:0.01em;
+    margin:0;
+  }
+  .header{
+    background:
+      repeating-linear-gradient(90deg, var(--turf-line) 0 2px, transparent 2px 64px),
+      var(--turf-dark);
+    padding:22px 18px 0 18px;
+    border-bottom:3px solid var(--gold);
+  }
+  .header h1{
+    font-size:26px;
+    font-weight:600;
+    color:var(--chalk);
+  }
+  .rules-list{
+    list-style:none;
+    padding:0;
+    margin:10px 0 0 0;
+    max-width:520px;
+  }
+  .rules-list li{
+    font-size:13px;
+    color:var(--chalk-dim);
+    padding:3px 0 3px 16px;
+    position:relative;
+  }
+  .rules-list li:before{
+    content:'\203A';
+    position:absolute;
+    left:0;
+    color:var(--gold);
+    font-weight:600;
+  }
+  .lock-btn{
+    width:100%;
+    background:var(--gold);
+    color:var(--turf-dark);
+    border:none;
+    font-family:'Oswald', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:12px;
+    cursor:pointer;
+    margin-top:4px;
+  }
+  .lock-status{
+    font-size:13px;
+    color:var(--chalk-dim);
+    padding:12px 0 4px 0;
+    text-align:center;
+  }
+  .link-btn{
+    background:none;
+    border:none;
+    color:var(--gold);
+    text-decoration:underline;
+    cursor:pointer;
+    font-size:13px;
+    padding:0;
+    font-family:'IBM Plex Sans', sans-serif;
+  }
+  input:disabled, select:disabled{ opacity:0.45; cursor:not-allowed; }
+  .toggle-group button:disabled{ opacity:0.45; cursor:not-allowed; }
+  .tabs{
+    display:flex;
+    margin-top:18px;
+    gap:2px;
+  }
+  .tab{
+    flex:1;
+    background:transparent;
+    border:none;
+    color:var(--chalk-dim);
+    font-family:'Oswald', sans-serif;
+    font-size:14px;
+    font-weight:500;
+    padding:12px 4px;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+  }
+  .tab.active{
+    color:var(--chalk);
+    border-bottom:3px solid var(--gold);
+  }
+  .content{
+    max-width:640px;
+    margin:0 auto;
+    padding:20px 16px 40px 16px;
+  }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .user-btn{
+    flex:1;
+    min-width:120px;
+    background:var(--turf-dark);
+    border:1px solid var(--turf-line);
+    color:var(--chalk);
+    font-family:'Oswald', sans-serif;
+    font-size:15px;
+    padding:11px 8px;
+    cursor:pointer;
+  }
+  .user-btn.active{
+    background:var(--gold);
+    color:var(--turf-dark);
+    border-color:var(--gold);
+    font-weight:600;
+  }
+  select, input[type="number"], input[type="text"]{
+    background:var(--turf-dark);
+    border:1px solid var(--turf-line);
+    color:var(--chalk);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:14px;
+    padding:9px 10px;
+    width:100%;
+  }
+  select:focus, input:focus{ outline:1px solid var(--gold); outline-offset:1px; }
+  .field-label{ font-size:12px; color:var(--chalk-dim); display:block; margin-bottom:4px; }
+  .week-select-wrap{ margin:16px 0 22px 0; }
+
+  .pick-card{
+    border:1px solid var(--turf-line);
+    margin-bottom:16px;
+    position:relative;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+  }
+  .pick-card__num{
+    font-family:'Oswald', sans-serif;
+    font-size:12px;
+    color:var(--turf-dark);
+    background:var(--gold);
+    display:inline-block;
+    padding:4px 10px;
+    font-weight:600;
+  }
+  .pick-card__body{ padding:14px; }
+  .teams-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .teams-row .at{ font-size:12px; color:var(--chalk-dim); flex-shrink:0; }
+  .spread-row{ display:flex; align-items:flex-end; gap:8px; margin-bottom:10px; }
+  .spread-row > div{ flex:1; }
+  .spread-row > div:last-child{ flex:0 0 90px; }
+
+  .toggle-group{ display:flex; gap:8px; }
+  .toggle-group button{
+    flex:1;
+    background:var(--turf-dark);
+    border:1px solid var(--turf-line);
+    color:var(--chalk);
+    padding:10px 6px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:13px;
+    cursor:pointer;
+    text-align:center;
+  }
+  .toggle-group button.sel{
+    background:var(--steel);
+    border-color:var(--steel);
+    color:var(--chalk);
+    font-weight:600;
+  }
+
+  details.score-entry{ margin-top:10px; border-top:1px dashed var(--turf-line); padding-top:10px; }
+  details.score-entry summary{
+    cursor:pointer;
+    font-size:12.5px;
+    color:var(--chalk-dim);
+  }
+  .score-inputs{ display:flex; gap:8px; margin-top:8px; }
+  .score-inputs > div{ flex:1; }
+
+  .tiebreak-box{
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px dashed var(--turf-line);
+  }
+  .tiebreak-box .field-label{ color:var(--gold); }
+
+  .result-strip{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 14px;
+    border-top:1px solid var(--turf-line);
+    font-family:'Oswald', sans-serif;
+    font-size:13px;
+  }
+  .badge{
+    padding:2px 10px;
+    font-weight:600;
+    font-size:12px;
+    letter-spacing:0.03em;
+  }
+  .badge.W{ background:var(--win); color:var(--chalk); }
+  .badge.L{ background:var(--rust); color:var(--chalk); }
+  .badge.P{ background:var(--steel); color:var(--chalk); }
+  .badge.pending{ background:transparent; color:var(--chalk-dim); border:1px solid var(--turf-line); }
+
+  .save-indicator{
+    position:fixed;
+    bottom:16px;
+    left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--gold);
+    color:var(--turf-dark);
+    font-family:'Oswald', sans-serif;
+    font-size:12px;
+    font-weight:600;
+    padding:7px 16px;
+    opacity:0;
+    transition:opacity .25s, transform .25s;
+    pointer-events:none;
+    z-index:60;
+  }
+  .save-indicator.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .save-error-banner{
+    position:fixed;
+    top:0; left:0; right:0;
+    background:var(--rust);
+    color:var(--chalk);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:13px;
+    padding:10px 14px;
+    text-align:center;
+    transform:translateY(-100%);
+    transition:transform .25s;
+    z-index:50;
+  }
+  .save-error-banner.show{ transform:translateY(0); }
+  .save-error-banner button{
+    margin-left:8px;
+    background:none;
+    border:1px solid var(--chalk);
+    color:var(--chalk);
+    padding:2px 10px;
+    cursor:pointer;
+    font-size:12px;
+    font-family:'IBM Plex Sans', sans-serif;
+  }
+
+  .week-table{ width:100%; border-collapse:collapse; margin-top:6px; }
+  .week-table th{
+    font-family:'Oswald', sans-serif;
+    font-size:13px;
+    font-weight:500;
+    text-align:left;
+    color:var(--gold);
+    border-bottom:2px solid var(--gold);
+    padding:8px 6px;
+  }
+  .week-table td{
+    padding:9px 6px;
+    border-bottom:1px solid var(--turf-line);
+    font-size:13px;
+    vertical-align:top;
+  }
+  .pickline{ margin-bottom:4px; }
+  .pickline .spread-note{ color:var(--chalk-dim); font-size:11.5px; }
+
+  .standings-table{ width:100%; border-collapse:collapse; }
+  .standings-table th{
+    font-family:'Oswald', sans-serif;
+    font-size:13px;
+    text-align:left;
+    color:var(--gold);
+    border-bottom:2px solid var(--gold);
+    padding:9px 8px;
+  }
+  .standings-table td{
+    padding:12px 8px;
+    border-bottom:1px solid var(--turf-line);
+  }
+  .rank-cell{ font-family:'Oswald', sans-serif; font-size:20px; color:var(--chalk-dim); width:34px; }
+  .rank-cell.first{ color:var(--gold); }
+  .name-cell{ font-family:'Oswald', sans-serif; font-size:16px; }
+  .pts-cell{ font-family:'Oswald', sans-serif; font-size:20px; text-align:right; }
+  .record-cell{ font-size:12px; color:var(--chalk-dim); }
+
+  .info-card{
+    background:var(--turf-dark);
+    border-left:3px solid var(--gold);
+    padding:12px 14px;
+    font-size:13px;
+    color:var(--chalk-dim);
+    margin-bottom:20px;
+  }
+  .info-card b{ color:var(--chalk); font-weight:600; }
+
+  .empty-note{ color:var(--chalk-dim); font-size:13px; padding:30px 0; text-align:center; }
+  .loading-note{ color:var(--chalk-dim); font-size:13px; padding:20px 0; }
+
+  h2.section-title{
+    font-size:18px;
+    font-weight:500;
+    margin-bottom:4px;
+  }
+  .section-sub{ font-size:12.5px; color:var(--chalk-dim); margin-bottom:16px; }
+
+  .setup-notice{
+    max-width:560px;
+    margin:60px auto;
+    padding:24px;
+    border:1px solid var(--gold);
+    background:var(--turf-dark);
+  }
+  .setup-notice h2{ font-size:18px; margin-bottom:10px; color:var(--gold); }
+  .setup-notice p{ font-size:13.5px; color:var(--chalk-dim); margin:0 0 10px 0; }
+  .setup-notice code{
+    background:rgba(0,0,0,0.3);
+    padding:2px 6px;
+    font-size:12.5px;
+    color:var(--chalk);
+  }
+</style>
+
+<div id="app"></div>
+<div class="save-indicator" id="saveIndicator">Saved</div>
+<div class="save-error-banner" id="saveErrorBanner">Couldn't save your last change &mdash; check your connection. <button id="retrySaveBtn">Retry</button></div>
+
+<datalist id="nfl-teams">
+  <option value="Arizona Cardinals"><option value="Atlanta Falcons"><option value="Baltimore Ravens">
+  <option value="Buffalo Bills"><option value="Carolina Panthers"><option value="Chicago Bears">
+  <option value="Cincinnati Bengals"><option value="Cleveland Browns"><option value="Dallas Cowboys">
+  <option value="Denver Broncos"><option value="Detroit Lions"><option value="Green Bay Packers">
+  <option value="Houston Texans"><option value="Indianapolis Colts"><option value="Jacksonville Jaguars">
+  <option value="Kansas City Chiefs"><option value="Las Vegas Raiders"><option value="Los Angeles Chargers">
+  <option value="Los Angeles Rams"><option value="Miami Dolphins"><option value="Minnesota Vikings">
+  <option value="New England Patriots"><option value="New Orleans Saints"><option value="New York Giants">
+  <option value="New York Jets"><option value="Philadelphia Eagles"><option value="Pittsburgh Steelers">
+  <option value="San Francisco 49ers"><option value="Seattle Seahawks"><option value="Tampa Bay Buccaneers">
+  <option value="Tennessee Titans"><option value="Washington Commanders">
+</datalist>
+
+<script>
+(function(){
+
+  // =====================================================================
+  // CONFIG — fill this in before using the app.
+  // owner/repo are already set from your GitHub screenshot. The only
+  // thing you still need to paste in is the fine-grained token you
+  // generate under Settings -> Developer settings -> Personal access
+  // tokens -> Fine-grained tokens, scoped to ONLY this repo, with
+  // Contents: Read and write permission.
+  // =====================================================================
+  const GITHUB_CONFIG = {
+    owner: 'scarpalettoa-dev',
+    repo: 'scarpaletto-pigskin-pool',
+    branch: 'main',
+    path: 'data/picks.json',
+    token: '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'
+  };
+  // =====================================================================
+
+  const USERS = ['Logan','Dragana','Carolee','Phil'];
+
+  const REGULAR = Array.from({length:18}, (_,i)=>({id:'reg-'+(i+1), label:'Week '+(i+1), picks:3, playoff:false}));
+  const PLAYOFF = [
+    {id:'wildcard', label:'Wild Card', picks:2, playoff:true},
+    {id:'divisional', label:'Divisional', picks:2, playoff:true},
+    {id:'conference', label:'Conf. Championship', picks:2, playoff:true},
+    {id:'superbowl', label:'Super Bowl', picks:1, playoff:true},
+  ];
+  const ALL_WEEKS = REGULAR.concat(PLAYOFF);
+  const weekMeta = id => ALL_WEEKS.find(w => w.id === id);
+
+  const App = {
+    user: null,
+    view: 'picks',
+    weekId: 'reg-1',
+    remote: null,      // { weeks: { weekId: {picks, locked, changesUsed} } }
+    remoteSha: null,
+    remoteLoaded: false,
+    configOk: GITHUB_CONFIG.token && GITHUB_CONFIG.token.indexOf('PASTE_YOUR') === -1,
+  };
+
+  // ---------- data helpers ----------
+
+  function emptyPick(){
+    return {teamA:'', teamB:'', favored:'A', spread:'', pick:'A', scoreA:'', scoreB:'', predA:'', predB:''};
+  }
+  function defaultWeekData(meta){
+    const picks = {}; const locked = {}; const changesUsed = {};
+    USERS.forEach(u => {
+      picks[u] = Array.from({length: meta.picks}, emptyPick);
+      locked[u] = false;
+      changesUsed[u] = 0;
+    });
+    return {picks, locked, changesUsed};
+  }
+  function ensureWeekShape(doc, weekId){
+    const meta = weekMeta(weekId);
+    if (!doc.weeks) doc.weeks = {};
+    if (!doc.weeks[weekId]) doc.weeks[weekId] = defaultWeekData(meta);
+    const wd = doc.weeks[weekId];
+    if (!wd.picks) wd.picks = {};
+    if (!wd.locked) wd.locked = {};
+    if (!wd.changesUsed) wd.changesUsed = {};
+    USERS.forEach(u => {
+      if (!wd.picks[u]) wd.picks[u] = Array.from({length: meta.picks}, emptyPick);
+      while (wd.picks[u].length < meta.picks) wd.picks[u].push(emptyPick());
+      if (typeof wd.locked[u] !== 'boolean') wd.locked[u] = false;
+      if (typeof wd.changesUsed[u] !== 'number') wd.changesUsed[u] = 0;
+    });
+    return wd;
+  }
+
+  function b64EncodeUnicode(str){
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+  function b64DecodeUnicode(str){
+    return decodeURIComponent(escape(atob(str)));
+  }
+
+  function ghHeaders(extra){
+    return Object.assign({
+      'Authorization': 'Bearer ' + GITHUB_CONFIG.token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
+    }, extra || {});
+  }
+
+  async function ghGetFile(){
+    const url = 'https://api.github.com/repos/' + GITHUB_CONFIG.owner + '/' + GITHUB_CONFIG.repo +
+      '/contents/' + GITHUB_CONFIG.path + '?ref=' + GITHUB_CONFIG.branch + '&_=' + Date.now();
+    const res = await fetch(url, { headers: ghHeaders() });
+    if (res.status === 404){
+      return { data: { weeks: {} }, sha: null };
+    }
+    if (res.status === 401 || res.status === 403){
+      const err = new Error('GitHub auth failed'); err.status = res.status; throw err;
+    }
+    if (!res.ok){
+      const err = new Error('GitHub read failed: ' + res.status); err.status = res.status; throw err;
+    }
+    const json = await res.json();
+    let data;
+    try{ data = JSON.parse(b64DecodeUnicode(json.content.replace(/\n/g,''))); }
+    catch(e){ data = { weeks: {} }; }
+    if (!data.weeks) data.weeks = {};
+    return { data, sha: json.sha };
+  }
+
+  async function ghPutFile(data, sha){
+    const url = 'https://api.github.com/repos/' + GITHUB_CONFIG.owner + '/' + GITHUB_CONFIG.repo +
+      '/contents/' + GITHUB_CONFIG.path;
+    const body = {
+      message: 'Update picks',
+      content: b64EncodeUnicode(JSON.stringify(data, null, 2)),
+      branch: GITHUB_CONFIG.branch
+    };
+    if (sha) body.sha = sha;
+    const res = await fetch(url, { method: 'PUT', headers: ghHeaders({'Content-Type':'application/json'}), body: JSON.stringify(body) });
+    if (res.status === 409){
+      const err = new Error('conflict'); err.status = 409; throw err;
+    }
+    if (res.status === 401 || res.status === 403){
+      const err = new Error('GitHub auth failed'); err.status = res.status; throw err;
+    }
+    if (!res.ok){
+      const err = new Error('GitHub write failed: ' + res.status); err.status = res.status; throw err;
+    }
+    return await res.json();
+  }
+
+  async function ensureRemoteLoaded(force){
+    if (App.remoteLoaded && !force) return App.remote;
+    const { data, sha } = await ghGetFile();
+    App.remote = data;
+    App.remoteSha = sha;
+    App.remoteLoaded = true;
+    return App.remote;
+  }
+
+  async function loadWeek(weekId){
+    await ensureRemoteLoaded(false);
+    return ensureWeekShape(App.remote, weekId);
+  }
+
+  let saveTimers = {};
+  let lastFailedWeek = null;
+
+  function scheduleSave(weekId){
+    clearTimeout(saveTimers[weekId]);
+    saveTimers[weekId] = setTimeout(() => { syncAndSave(weekId); }, 700);
+  }
+
+  async function syncAndSave(weekId, attempt){
+    attempt = attempt || 1;
+    const localWeek = App.remote.weeks[weekId];
+    const localUserPicks = JSON.parse(JSON.stringify(localWeek.picks[App.user]));
+    const localLocked = localWeek.locked[App.user];
+    const localChangesUsed = localWeek.changesUsed[App.user];
+    try{
+      const { data: freshData, sha: freshSha } = await ghGetFile();
+      const wd = ensureWeekShape(freshData, weekId);
+      wd.picks[App.user] = localUserPicks;
+      wd.locked[App.user] = localLocked;
+      wd.changesUsed[App.user] = localChangesUsed;
+      const result = await ghPutFile(freshData, freshSha);
+      App.remote = freshData;
+      App.remoteSha = result.content ? result.content.sha : null;
+      flashSaved();
+      clearSaveError();
+    }catch(e){
+      console.error('save failed', e);
+      if (e.status === 409 && attempt < 4){
+        return syncAndSave(weekId, attempt + 1);
+      }
+      if (attempt < 3){
+        setTimeout(() => { syncAndSave(weekId, attempt + 1); }, attempt * 1200);
+      } else {
+        showSaveError(weekId);
+      }
+    }
+  }
+
+  function flashSaved(){
+    const el = document.getElementById('saveIndicator');
+    el.classList.add('show');
+    clearTimeout(flashSaved._t);
+    flashSaved._t = setTimeout(()=> el.classList.remove('show'), 900);
+  }
+  function showSaveError(weekId){
+    lastFailedWeek = weekId;
+    document.getElementById('saveErrorBanner').classList.add('show');
+  }
+  function clearSaveError(){
+    lastFailedWeek = null;
+    document.getElementById('saveErrorBanner').classList.remove('show');
+  }
+
+  function computeResult(p){
+    if (p.scoreA === '' || p.scoreB === '' || p.spread === '') return null;
+    const sA = parseFloat(p.scoreA), sB = parseFloat(p.scoreB), sp = parseFloat(p.spread);
+    if (isNaN(sA) || isNaN(sB) || isNaN(sp)) return null;
+    const pickedScore = p.pick === 'A' ? sA : sB;
+    const oppScore = p.pick === 'A' ? sB : sA;
+    const spreadForPicked = (p.pick === p.favored) ? -sp : sp;
+    const adj = (pickedScore - oppScore) + spreadForPicked;
+    if (adj > 0) return 'W';
+    if (adj === 0) return 'P';
+    return 'L';
+  }
+  function teamName(p, side){
+    const v = side === 'A' ? p.teamA : p.teamB;
+    return v && v.trim() ? v.trim() : ('Team ' + side);
+  }
+
+  // ---------- rendering ----------
+
+  function weekOptions(selectedId){
+    let html = '<optgroup label="Regular Season">';
+    REGULAR.forEach(w => { html += '<option value="'+w.id+'" '+(w.id===selectedId?'selected':'')+'>'+w.label+'</option>'; });
+    html += '</optgroup><optgroup label="Playoffs">';
+    PLAYOFF.forEach(w => { html += '<option value="'+w.id+'" '+(w.id===selectedId?'selected':'')+'>'+w.label+'</option>'; });
+    html += '</optgroup>';
+    return html;
+  }
+
+  function renderHeader(){
+    return '' +
+      '<div class="header">' +
+        '<h1>Scarpaletto Pigskin Pool</h1>' +
+        '<ul class="rules-list">' +
+          '<li>Pick 3 games a week against the CBS spread.</li>' +
+          '<li>Playoffs drop to 2 picks, 1 for the Super Bowl.</li>' +
+          '<li>Loser\'s circle buys dinner at the end of the season.</li>' +
+          '<li>One pick change allowed per week, up until that game kicks off.</li>' +
+        '</ul>' +
+        '<div class="tabs">' +
+          '<button class="tab '+(App.view==='picks'?'active':'')+'" data-view="picks">Make Picks</button>' +
+          '<button class="tab '+(App.view==='thisweek'?'active':'')+'" data-view="thisweek">This Week</button>' +
+          '<button class="tab '+(App.view==='standings'?'active':'')+'" data-view="standings">Standings</button>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function renderUserPicker(){
+    return '<div class="row" id="userPicker">' +
+      USERS.map(u => '<button class="user-btn '+(App.user===u?'active':'')+'" data-user="'+u+'">'+u+'</button>').join('') +
+      '</div>';
+  }
+
+  function renderWeekPicker(){
+    return '<div class="week-select-wrap"><span class="field-label">Week</span><select id="weekSelect">'+weekOptions(App.weekId)+'</select></div>';
+  }
+
+  function renderPickCard(p, idx, weekPlayoff, locked){
+    const res = computeResult(p);
+    const badge = res ? '<span class="badge '+res+'">'+(res==='W'?'WIN':res==='L'?'LOSS':'PUSH')+'</span>'
+                       : '<span class="badge pending">Pending</span>';
+    const dis = locked ? 'disabled' : '';
+    return '' +
+      '<div class="pick-card" data-idx="'+idx+'">' +
+        '<span class="pick-card__num">Pick '+(idx+1)+'</span>' +
+        '<div class="pick-card__body">' +
+          '<div class="teams-row">' +
+            '<input type="text" list="nfl-teams" data-field="teamA" placeholder="Away team" value="'+p.teamA+'" '+dis+'>' +
+            '<span class="at">at</span>' +
+            '<input type="text" list="nfl-teams" data-field="teamB" placeholder="Home team" value="'+p.teamB+'" '+dis+'>' +
+          '</div>' +
+          '<div class="spread-row">' +
+            '<div><span class="field-label">Favored</span>' +
+              '<select data-field="favored" '+dis+'>' +
+                '<option value="A" '+(p.favored==='A'?'selected':'')+'>'+teamName(p,'A')+'</option>' +
+                '<option value="B" '+(p.favored==='B'?'selected':'')+'>'+teamName(p,'B')+'</option>' +
+              '</select>' +
+            '</div>' +
+            '<div><span class="field-label">By</span>' +
+              '<input type="number" step="0.5" data-field="spread" placeholder="3" value="'+p.spread+'" '+dis+'>' +
+            '</div>' +
+          '</div>' +
+          '<div><span class="field-label">Your pick (against the spread)</span>' +
+            '<div class="toggle-group" data-field="pick">' +
+              '<button data-value="A" class="'+(p.pick==='A'?'sel':'')+'" '+dis+'>'+teamName(p,'A')+'</button>' +
+              '<button data-value="B" class="'+(p.pick==='B'?'sel':'')+'" '+dis+'>'+teamName(p,'B')+'</button>' +
+            '</div>' +
+          '</div>' +
+          (weekPlayoff ? (
+            '<div class="tiebreak-box"><span class="field-label">Tiebreaker &mdash; guess the final score</span>' +
+            '<div class="score-inputs">' +
+              '<div><input type="number" data-field="predA" placeholder="'+teamName(p,'A')+' pts" value="'+p.predA+'" '+dis+'></div>' +
+              '<div><input type="number" data-field="predB" placeholder="'+teamName(p,'B')+' pts" value="'+p.predB+'" '+dis+'></div>' +
+            '</div></div>'
+          ) : '') +
+          '<details class="score-entry"><summary>Enter final score to grade this pick</summary>' +
+            '<div class="score-inputs">' +
+              '<div><input type="number" data-field="scoreA" placeholder="'+teamName(p,'A')+' score" value="'+p.scoreA+'"></div>' +
+              '<div><input type="number" data-field="scoreB" placeholder="'+teamName(p,'B')+' score" value="'+p.scoreB+'"></div>' +
+            '</div>' +
+          '</details>' +
+        '</div>' +
+        '<div class="result-strip"><span>'+(res ? 'Result' : 'Waiting on final score')+'</span>'+badge+'</div>' +
+      '</div>';
+  }
+
+  async function renderPicksView(){
+    let html = renderUserPicker() + renderWeekPicker();
+    if (!App.user){
+      html += '<div class="empty-note">Pick your name above to enter this week\'s picks.</div>';
+      return html;
+    }
+    const meta = weekMeta(App.weekId);
+    const wd = await loadWeek(App.weekId);
+    const picks = wd.picks[App.user];
+    const isLocked = !!wd.locked[App.user];
+    const changesUsed = wd.changesUsed[App.user] || 0;
+    html += '<div id="pickCards">' + picks.map((p,i)=> renderPickCard(p,i,meta.playoff,isLocked)).join('') + '</div>';
+    if (!isLocked){
+      html += '<button id="lockBtn" class="lock-btn">Lock in my picks for '+meta.label+'</button>';
+    } else if (changesUsed < 1){
+      html += '<div class="lock-status">Picks locked for '+meta.label+'. <button id="unlockBtn" class="link-btn">Make a change (1 left this week)</button></div>';
+    } else {
+      html += '<div class="lock-status">Picks locked for '+meta.label+'. No changes left this week.</div>';
+    }
+    return html;
+  }
+
+  async function renderThisWeekView(){
+    let html = renderWeekPicker();
+    const meta = weekMeta(App.weekId);
+    const wd = await loadWeek(App.weekId);
+    html += '<h2 class="section-title">'+meta.label+'</h2><div class="section-sub">Everyone\'s picks, synced from GitHub.</div>';
+    html += '<table class="week-table"><thead><tr><th>Player</th><th>Picks</th><th>Pts</th></tr></thead><tbody>';
+    USERS.forEach(u => {
+      const picks = wd.picks[u];
+      let pts = 0;
+      const lines = picks.map(p => {
+        const res = computeResult(p);
+        if (res === 'W') pts += 1;
+        const hasTeams = p.teamA || p.teamB;
+        if (!hasTeams) return '<div class="pickline spread-note">&mdash; no pick entered &mdash;</div>';
+        const badge = res ? '<span class="badge '+res+'" style="margin-left:6px;">'+res+'</span>' : '<span class="badge pending" style="margin-left:6px;">&hellip;</span>';
+        return '<div class="pickline">'+teamName(p,p.pick)+' '+badge+'<div class="spread-note">'+teamName(p,p.favored)+' by '+(p.spread || '?')+'</div></div>';
+      }).join('');
+      html += '<tr><td>'+u+'</td><td>'+lines+'</td><td class="pts-cell">'+pts+'</td></tr>';
+    });
+    html += '</tbody></table>';
+    return html;
+  }
+
+  async function renderStandingsView(){
+    await ensureRemoteLoaded(true);
+    const totals = {};
+    USERS.forEach(u => totals[u] = {pts:0, w:0, l:0, p:0});
+    ALL_WEEKS.forEach(w => {
+      const wd = ensureWeekShape(App.remote, w.id);
+      USERS.forEach(u => {
+        wd.picks[u].forEach(pick => {
+          const res = computeResult(pick);
+          if (res === 'W'){ totals[u].pts += 1; totals[u].w += 1; }
+          else if (res === 'L'){ totals[u].l += 1; }
+          else if (res === 'P'){ totals[u].p += 1; }
+        });
+      });
+    });
+    const ranked = USERS.slice().sort((a,b) => totals[b].pts - totals[a].pts);
+    let html = '<div class="info-card"><b>The stakes:</b> low score at season\'s end buys dinner for the table. Playoff weeks carry a final-score tiebreaker if points are level.</div>';
+    html += '<table class="standings-table"><thead><tr><th></th><th>Player</th><th>Record</th><th style="text-align:right;">Pts</th></tr></thead><tbody>';
+    ranked.forEach((u,i) => {
+      const t = totals[u];
+      html += '<tr><td class="rank-cell '+(i===0?'first':'')+'">'+(i+1)+'</td><td class="name-cell">'+u+'</td><td class="record-cell">'+t.w+'&ndash;'+t.l+'&ndash;'+t.p+'</td><td class="pts-cell">'+t.pts+'</td></tr>';
+    });
+    html += '</tbody></table>';
+    return html;
+  }
+
+  function renderSetupNotice(errorDetail){
+    return '' +
+      '<div class="content"><div class="setup-notice">' +
+        '<h2>One setup step left</h2>' +
+        (App.configOk ?
+          ('<p>The app couldn\'t reach GitHub'+(errorDetail?(': '+errorDetail):'.')+' Double-check the token is still valid and scoped to <code>'+GITHUB_CONFIG.owner+'/'+GITHUB_CONFIG.repo+'</code> with Contents: Read and write access, then reload this page.</p>')
+          :
+          ('<p>This file needs a GitHub token before it can save anything. Open <code>index.html</code> in a text editor, find <code>GITHUB_CONFIG</code> near the top of the script, and paste your fine-grained token in place of <code>PASTE_YOUR_FINE_GRAINED_TOKEN_HERE</code>. Then re-upload the file to your repo.</p>')
+        ) +
+      '</div></div>';
+  }
+
+  async function render(){
+    const root = document.getElementById('app');
+    root.innerHTML = renderHeader() + '<div class="content"><div class="loading-note">Loading&hellip;</div></div>';
+    bindHeaderEvents();
+
+    if (!App.configOk){
+      root.innerHTML = renderHeader() + renderSetupNotice();
+      bindHeaderEvents();
+      return;
+    }
+
+    let contentHtml;
+    try{
+      if (App.view === 'picks') contentHtml = await renderPicksView();
+      else if (App.view === 'thisweek') contentHtml = await renderThisWeekView();
+      else contentHtml = await renderStandingsView();
+    }catch(e){
+      console.error(e);
+      root.innerHTML = renderHeader() + renderSetupNotice(e.message);
+      bindHeaderEvents();
+      return;
+    }
+
+    root.innerHTML = renderHeader() + '<div class="content">' + contentHtml + '</div>';
+    bindHeaderEvents();
+    bindContentEvents();
+  }
+
+  function bindHeaderEvents(){
+    document.querySelectorAll('.tab').forEach(btn => {
+      btn.addEventListener('click', () => { App.view = btn.dataset.view; render(); });
+    });
+  }
+
+  function bindContentEvents(){
+    const weekSelect = document.getElementById('weekSelect');
+    if (weekSelect){
+      weekSelect.addEventListener('change', () => { App.weekId = weekSelect.value; render(); });
+    }
+    const userPicker = document.getElementById('userPicker');
+    if (userPicker){
+      userPicker.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-user]');
+        if (!btn) return;
+        App.user = btn.dataset.user;
+        render();
+      });
+    }
+    const lockBtn = document.getElementById('lockBtn');
+    if (lockBtn){
+      lockBtn.addEventListener('click', () => {
+        App.remote.weeks[App.weekId].locked[App.user] = true;
+        scheduleSave(App.weekId);
+        render();
+      });
+    }
+    const unlockBtn = document.getElementById('unlockBtn');
+    if (unlockBtn){
+      unlockBtn.addEventListener('click', () => {
+        const wd = App.remote.weeks[App.weekId];
+        wd.locked[App.user] = false;
+        wd.changesUsed[App.user] = (wd.changesUsed[App.user] || 0) + 1;
+        scheduleSave(App.weekId);
+        render();
+      });
+    }
+    const pickCards = document.getElementById('pickCards');
+    if (!pickCards) return;
+
+    pickCards.addEventListener('input', (e) => handleFieldChange(e.target));
+    pickCards.addEventListener('change', (e) => handleFieldChange(e.target));
+    pickCards.addEventListener('click', (e) => {
+      const btn = e.target.closest('.toggle-group[data-field="pick"] button');
+      if (!btn) return;
+      const card = btn.closest('.pick-card');
+      const idx = parseInt(card.dataset.idx, 10);
+      const p = App.remote.weeks[App.weekId].picks[App.user][idx];
+      p.pick = btn.dataset.value;
+      card.querySelectorAll('.toggle-group[data-field="pick"] button').forEach(b => b.classList.toggle('sel', b.dataset.value === p.pick));
+      updateResultStrip(card, p);
+      scheduleSave(App.weekId);
+    });
+  }
+
+  function handleFieldChange(target){
+    const field = target.dataset.field;
+    if (!field) return;
+    const card = target.closest('.pick-card');
+    if (!card) return;
+    const idx = parseInt(card.dataset.idx, 10);
+    const p = App.remote.weeks[App.weekId].picks[App.user][idx];
+    p[field] = target.value;
+
+    if (field === 'teamA' || field === 'teamB'){
+      const favSel = card.querySelector('select[data-field="favored"]');
+      if (favSel){
+        favSel.options[0].text = teamName(p,'A');
+        favSel.options[1].text = teamName(p,'B');
+      }
+      card.querySelectorAll('.toggle-group[data-field="pick"] button').forEach(b => {
+        b.textContent = teamName(p, b.dataset.value);
+      });
+      const predA = card.querySelector('input[data-field="predA"]');
+      const predB = card.querySelector('input[data-field="predB"]');
+      if (predA) predA.placeholder = teamName(p,'A') + ' pts';
+      if (predB) predB.placeholder = teamName(p,'B') + ' pts';
+      const scoreAIn = card.querySelector('input[data-field="scoreA"]');
+      const scoreBIn = card.querySelector('input[data-field="scoreB"]');
+      if (scoreAIn) scoreAIn.placeholder = teamName(p,'A') + ' score';
+      if (scoreBIn) scoreBIn.placeholder = teamName(p,'B') + ' score';
+    }
+    updateResultStrip(card, p);
+    scheduleSave(App.weekId);
+  }
+
+  function updateResultStrip(card, p){
+    const res = computeResult(p);
+    const strip = card.querySelector('.result-strip');
+    const label = strip.querySelector('span');
+    const badgeWrap = strip.querySelector('.badge');
+    label.textContent = res ? 'Result' : 'Waiting on final score';
+    badgeWrap.className = 'badge ' + (res || 'pending');
+    badgeWrap.textContent = res === 'W' ? 'WIN' : res === 'L' ? 'LOSS' : res === 'P' ? 'PUSH' : 'Pending';
+  }
+
+  document.getElementById('retrySaveBtn').addEventListener('click', () => {
+    if (lastFailedWeek){
+      clearSaveError();
+      syncAndSave(lastFailedWeek);
+    }
+  });
+
+  // Light auto-refresh so "This Week" and "Standings" feel live without
+  // needing anyone to manually reload.
+  setInterval(() => {
+    if (App.view === 'thisweek' || App.view === 'standings'){
+      render();
+    }
+  }, 20000);
+
+  render();
+})();
+</script>
