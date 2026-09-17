@@ -302,13 +302,13 @@
       "locked": {
         "Logan": false,
         "Dragana": false,
-        "Carolee": true,
+        "Carolee": false,
         "Phil": false
       },
       "changesUsed": {
         "Logan": 0,
         "Dragana": 0,
-        "Carolee": 0,
+        "Carolee": 1,
         "Phil": 0
       }
     }
