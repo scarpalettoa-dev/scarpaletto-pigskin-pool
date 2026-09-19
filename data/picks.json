@@ -301,13 +301,13 @@
       },
       "locked": {
         "Logan": true,
-        "Dragana": true,
+        "Dragana": false,
         "Carolee": true,
         "Phil": false
       },
       "changesUsed": {
         "Logan": 0,
-        "Dragana": 0,
+        "Dragana": 1,
         "Carolee": 1,
         "Phil": 0
       }
