@@ -311,6 +311,162 @@
         "Carolee": 1,
         "Phil": 0
       }
+    },
+    "reg-3": {
+      "picks": {
+        "Logan": [
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          },
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          },
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          }
+        ],
+        "Dragana": [
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          },
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          },
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          }
+        ],
+        "Carolee": [
+          {
+            "teamA": "La",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          },
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          },
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          }
+        ],
+        "Phil": [
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          },
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          },
+          {
+            "teamA": "",
+            "teamB": "",
+            "favored": "A",
+            "spread": "",
+            "pick": "A",
+            "scoreA": "",
+            "scoreB": "",
+            "predA": "",
+            "predB": ""
+          }
+        ]
+      },
+      "locked": {
+        "Logan": false,
+        "Dragana": false,
+        "Carolee": false,
+        "Phil": false
+      },
+      "changesUsed": {
+        "Logan": 0,
+        "Dragana": 0,
+        "Carolee": 0,
+        "Phil": 0
+      }
     }
   }
 }
