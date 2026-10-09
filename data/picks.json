@@ -145,13 +145,13 @@
       },
       "locked": {
         "Logan": true,
-        "Dragana": true,
+        "Dragana": false,
         "Carolee": true,
         "Phil": true
       },
       "changesUsed": {
         "Logan": 1,
-        "Dragana": 0,
+        "Dragana": 1,
         "Carolee": 0,
         "Phil": 0
       }
