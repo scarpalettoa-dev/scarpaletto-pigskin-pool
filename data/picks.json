@@ -713,8 +713,8 @@
             "teamB": "Atlanta",
             "favored": "B",
             "spread": "3.5",
-            "pick": "B",
-            "scoreA": "23",
+            "pick": "A",
+            "scoreA": "",
             "scoreB": "",
             "predA": "",
             "predB": ""
