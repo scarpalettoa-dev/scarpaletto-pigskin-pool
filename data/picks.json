@@ -1073,7 +1073,7 @@
             "spread": "3.5",
             "pick": "A",
             "scoreA": "43",
-            "scoreB": "",
+            "scoreB": "13",
             "predA": "",
             "predB": ""
           }
@@ -1083,7 +1083,7 @@
         "Logan": true,
         "Dragana": false,
         "Carolee": true,
-        "Phil": false
+        "Phil": true
       },
       "changesUsed": {
         "Logan": 0,
