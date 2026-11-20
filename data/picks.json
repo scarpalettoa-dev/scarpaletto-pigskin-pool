@@ -1696,8 +1696,8 @@
             "favored": "A",
             "spread": "4.5",
             "pick": "B",
-            "scoreA": "20",
-            "scoreB": "20",
+            "scoreA": "",
+            "scoreB": "2023",
             "predA": "",
             "predB": ""
           }
